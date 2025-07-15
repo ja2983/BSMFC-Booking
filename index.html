@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book a Pitch – Bugbrooke St Michaels FC</title>
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- ✅ Load EmailJS SDK FIRST -->
+  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+  <script>
+    emailjs.init("hDPKD0IZX7WcNSZEa"); // ✅ Your Public Key
+  </script>
+
+  <!-- ✅ Load your main script AFTER EmailJS is initialized -->
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <nav>
+    <img src="bugbrooke-logo.png" alt="Bugbrooke Logo" />
+    <a href="index.html">📅 Book Pitch</a>
+    <a href="my-bookings.html">📖 My Bookings</a>
+    <a href="admin.html">🔧 Admin Dashboard</a>
+    <a href="register.html">🆕 Register</a>
+    <a href="login.html" id="loginLink">🔐 Login</a>
+    <a href="logout.html" id="logoutLink" class="hidden">🔓 Logout</a>
+  </nav>
+
+  <main>
+    <section id="bookingFormSection">
+      <h1>Book a Pitch</h1>
+      <form id="bookingForm">
+        <label for="pitch">Pitch</label>
+        <select id="pitch" name="pitch" required>
+          <option value="">Select a pitch</option>
+          <option value="Pitch 1 - 5v5">Pitch 1 - 5v5</option>
+          <option value="Pitch 2 - 7v7">Pitch 2 - 7v7</option>
+          <option value="Pitch 3 - Combi">Pitch 3 - Combi</option>
+          <option value="Pitch 4 - Small 11v11">Pitch 4 - Small 11v11</option>
+          <option value="Pitch 5 - 9v9">Pitch 5 - 9v9</option>
+          <option value="Pitch 6 - 11v11">Pitch 6 - 11v11</option>
+          <option value="Pitch 7 - Main Pitch">Pitch 7 - Main Pitch</option>
+        </select>
+
+        <label for="date">Date</label>
+        <input id="date" name="date" type="date" required />
+
+        <label for="time">Start Time</label>
+        <select id="time" name="time" required></select>
+
+        <label for="endTime">End Time</label>
+        <select id="endTime" name="endTime" required></select>
+
+        <label for="team">Team</label>
+        <select id="team" name="team" required>
+          <option value="">Select a team</option>
+        </select>
+
+        <label for="manager">Manager</label>
+        <input id="manager" name="manager" type="text" readonly required />
+
+        <button type="submit">Submit Booking</button>
+      </form>
+      <p id="confirmation" class="hidden">
+        Your booking request has been submitted!
+      </p>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,290 @@
+/* ==========================
+   Base Reset & Typography
+   ========================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: #f5f5f5;
+  color: #333;
+  line-height: 1.5;
+}
+
+/* ==========================
+   Utility Classes
+   ========================== */
+.hidden {
+  display: none !important;
+}
+
+/* ==========================
+   Navigation Bar (Flexbox Layout)
+   ========================== */
+nav {
+  display: flex;
+  align-items: center;
+  background: #2c3e50;
+  padding: 0.75em 1em;
+}
+
+nav img {
+  height: 40px;
+  margin-right: 1em;
+}
+
+nav a {
+  color: #ecf0f1;
+  text-decoration: none;
+  margin-right: 1em;
+  font-weight: 500;
+}
+
+nav a#loginLink,
+nav a#logoutLink {
+  margin-left: auto;
+  margin-right: 0;
+}
+
+/* ==========================
+   Main Layout
+   ========================== */
+main {
+  max-width: 900px;
+  margin: 2em auto;
+  padding: 0 1em;
+}
+
+/* ==========================
+   Booking Form
+   ========================== */
+#bookingFormSection {
+  background: #fff;
+  padding: 1.5em;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+#bookingForm label {
+  display: block;
+  margin-top: 1em;
+  font-weight: 600;
+}
+
+#bookingForm input,
+#bookingForm select {
+  width: 100%;
+  padding: 0.5em;
+  margin-top: 0.25em;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#bookingForm button[type="submit"] {
+  margin-top: 1.5em;
+  padding: 0.75em 1.5em;
+  background: #34495e;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1em;
+}
+
+#bookingForm button[type="submit"]:hover {
+  background: #2c3a50;
+}
+
+#confirmation {
+  margin-top: 1em;
+  color: #27ae60;
+  font-weight: 600;
+}
+
+/* ==========================
+   Calendar Section
+   ========================== */
+#calendarSection {
+  background: #fff;
+  margin-top: 2em;
+  padding: 1.5em;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+#calendarSection label {
+  display: inline-block;
+  margin-right: 0.5em;
+  font-weight: 600;
+}
+
+#calendarGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.5em;
+  margin-top: 1em;
+}
+
+.calendarSlot {
+  padding: 0.5em;
+  text-align: center;
+  font-size: 0.9em;
+  border-radius: 4px;
+  margin: 0.25em 0;
+}
+
+.calendarSlot.available {
+  background-color: #ecf0f1;
+  color: #333;
+}
+
+.calendarSlot.pending {
+  background-color: #f39c12;
+  color: #000;
+}
+
+.calendarSlot.approved {
+  background-color: #2ecc71;
+  color: #fff;
+}
+
+/* ==========================
+   Admin Dashboard & Tables
+   ========================== */
+.dashboard {
+  max-width: 1200px;
+  margin: 2em auto;
+  padding: 0 1em;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  margin-top: 2em;
+}
+
+thead {
+  background: #34495e;
+  color: #ecf0f1;
+}
+
+th,
+td {
+  padding: 0.75em;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+tr:nth-child(even) {
+  background: #f9f9f9;
+}
+
+table button {
+  margin-right: 0.5em;
+}
+
+table button:nth-of-type(1) {
+  background: #27ae60;
+  color: #fff;
+}
+
+table button:nth-of-type(2) {
+  background: #f39c12;
+  color: #fff;
+}
+
+table button:nth-of-type(3) {
+  background: #c0392b;
+  color: #fff;
+}
+
+table button:nth-of-type(4) {
+  background: #7f8c8d;
+  color: #fff;
+}
+
+/* ==========================
+   Generic Buttons
+   ========================== */
+button {
+  padding: 0.5em 1em;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+/* ==========================
+   Auth Pages (Login & Register)
+   ========================== */
+.auth-container {
+  max-width: 400px;
+  margin: 4em auto;
+  background: #fff;
+  padding: 2em;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.auth-container h1 {
+  text-align: center;
+  margin-bottom: 1em;
+  font-size: 1.5em;
+  color: #2c3e50;
+}
+
+.auth-container label {
+  margin-top: 1.25em;
+  font-weight: 600;
+  font-size: 0.95em;
+  color: #2c3e50;
+}
+
+.auth-container input {
+  width: 100%;
+  padding: 0.75em 1em;
+  margin-top: 0.5em;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fafafa;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.auth-container input:focus {
+  border-color: #34495e;
+  box-shadow: 0 0 0 3px rgba(52, 73, 94, 0.15);
+  outline: none;
+}
+
+.auth-container input::placeholder {
+  color: #999;
+}
+
+.auth-container button[type="submit"] {
+  margin-top: 2em;
+  padding: 0.75em 1.5em;
+  font-size: 1em;
+  font-weight: 600;
+  background: #34495e;
+  color: #ecf0f1;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.auth-container button[type="submit"]:hover {
+  background: #2c3a50;
+}
+
+.auth-container button[type="submit"]:active {
+  transform: translateY(1px);
+}

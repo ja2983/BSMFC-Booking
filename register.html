@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Register – Bugbrooke St Michaels FC</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js" defer></script>
+</head>
+<body class="registerPage">
+  <nav>
+    <img src="bugbrooke-logo.png" alt="Bugbrooke Logo" />
+    <a href="index.html">📅 Book Pitch</a>
+    <a href="my-bookings.html">📖 My Bookings</a>
+    <a href="admin.html">🔧 Admin Dashboard</a>
+    <a href="register.html">🆕 Register</a>
+    <a href="login.html" id="loginLink">🔐 Login</a>
+    <a href="logout.html" id="logoutLink">🔓 Logout</a>
+  </nav>
+
+  <h1>Register</h1>
+
+  <section class="cardPanel">
+    <form id="registerForm">
+      <label for="regUsername">Username:</label>
+      <input type="text" id="regUsername" required />
+
+      <label for="regEmail">Email:</label>
+      <input type="email" id="regEmail" required />
+
+      <label for="regPassword">Password:</label>
+      <input type="password" id="regPassword" required />
+
+      <label for="regConfirm">Confirm Password:</label>
+      <input type="password" id="regConfirm" required />
+
+      <button type="submit">Register</button>
+    </form>
+  </section>
+</body>
+</html>

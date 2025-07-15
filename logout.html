@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Logging Out – Bugbrooke St Michaels FC</title>
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    window.onload = function () {
+      localStorage.removeItem("isLoggedIn");
+      setTimeout(() => {
+        window.location.href = "login.html";
+      }, 1500);
+    };
+  </script>
+</head>
+  <nav>
+    <img src="bugbrooke-logo.png" alt="Bugbrooke Logo" />
+    <a href="index.html">📅 Book Pitch</a>
+    <a href="my-bookings.html">📖 My Bookings</a>
+    <a href="admin.html">🔧 Admin Dashboard</a>
+    <a href="register.html">🆕 Register</a>
+    <a href="login.html" id="loginLink">🔐 Login</a>
+    <a href="logout.html" id="logoutLink">🔓 Logout</a>
+  </nav>
+
+  <h1>Logging You Out…</h1>
+  <section class="cardPanel" style="text-align:center;">
+    <p>You are being securely signed out.</p>
+    <p><em>Redirecting to Login shortly…</em></p>
+  </section>
+</body>
+</html>
