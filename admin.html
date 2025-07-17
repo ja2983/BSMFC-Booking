@@ -23,7 +23,7 @@
   <main>
     <h1>Admin Dashboard</h1>
 
-    <!-- admin calendar -->
+    <!-- All Bookings Calendar -->
     <section>
       <h2>
         <button id="toggleAdminCalendar" class="collapsible">
@@ -38,7 +38,6 @@
         <div class="field-group">
           <label for="adminCalendarPitch">Pitch</label>
           <select id="adminCalendarPitch">
-            <option value="">All pitches</option>
             <option>Pitch 1 - 5v5</option>
             <option>Pitch 2 - 7v7</option>
             <option>Pitch 3 - Combi</option>
@@ -52,8 +51,9 @@
       </div>
     </section>
 
-    <!-- booking filters -->
-    <section class="filters">
+    <!-- Manage Bookings -->
+    <section>
+      <h2>Manage Bookings</h2>
       <div class="field-group">
         <label for="filterDate">Filter by Date</label>
         <input type="date" id="filterDate" />
@@ -61,7 +61,7 @@
       <div class="field-group">
         <label for="filterPitch">Filter by Pitch</label>
         <select id="filterPitch">
-          <option value="">All pitches</option>
+          <option value="">All Pitches</option>
           <option>Pitch 1 - 5v5</option>
           <option>Pitch 2 - 7v7</option>
           <option>Pitch 3 - Combi</option>
@@ -71,36 +71,33 @@
           <option>Pitch 7 - Main Pitch</option>
         </select>
       </div>
-    </section>
-
-    <!-- manage bookings -->
-    <section>
-      <h2>Manage Bookings</h2>
       <div class="admin-table-wrapper">
-        <table id="adminBookingTable">
-          <thead class="sticky-header">
+        <table id="adminBookingTable" class="sticky-header">
+          <thead>
             <tr>
               <th>Team</th>
               <th>Pitch</th>
               <th>Date</th>
               <th>Start</th>
               <th>End</th>
-              <th>User</th>
+              <th>Requested by</th>
               <th>Status</th>
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody></tbody>
+          <tbody>
+            <!-- Populated by script.js -->
+          </tbody>
         </table>
       </div>
     </section>
 
-    <!-- user management -->
+    <!-- User Management -->
     <section>
       <h2>User Management</h2>
       <div class="admin-table-wrapper">
-        <table id="userManagementTable">
-          <thead class="sticky-header">
+        <table id="userManagementTable" class="sticky-header">
+          <thead>
             <tr>
               <th>Username</th>
               <th>Email</th>
@@ -109,7 +106,9 @@
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody></tbody>
+          <tbody>
+            <!-- Populated by script.js -->
+          </tbody>
         </table>
       </div>
     </section>

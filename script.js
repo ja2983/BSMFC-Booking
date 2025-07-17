@@ -16,7 +16,6 @@ function logoutUser() {
   window.location.href = "login.html";
 }
 
-// Create default admin if none exists
 (function initDefaultAdmin() {
   const users = JSON.parse(localStorage.getItem("users")) || [];
   if (!users.some(u => u.role === "Admin")) {
@@ -160,7 +159,7 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 
   // ──────────────────────────────────────────
-  // 📅 CALENDAR RENDERING (index.html, my-bookings.html)
+  // 📅 CALENDAR RENDERING (index.html)
   // ──────────────────────────────────────────
   const calendarDate = document.getElementById("calendarDate");
   const calendarPitch = document.getElementById("calendarPitch");
@@ -362,16 +361,14 @@ document.addEventListener("DOMContentLoaded", function() {
           <td>${b.team}</td>
           <td>${b.pitch}</td>
           <td>${b.date}</td>
-          <td>${b.time}</td>
-          <td>${b.endTime}</td>
-          <td>${b.username}</td>
-          <td>${b.status}</td>
+          <td>`;
+        tr.innerHTML += `${b.time}</td><td>${b.endTime}</td><td>${b.username}</td>`;
+        tr.innerHTML += `<td>${b.status}</td>
           <td>
             <button data-index="${idx}" class="approve-btn">✅ Approve</button>
             <button data-index="${idx}" class="reject-btn">❌ Reject</button>
             <button data-index="${idx}" class="delete-btn">🗑 Delete</button>
-          </td>
-        `;
+          </td>`;
         tbody.appendChild(tr);
       });
 
@@ -412,7 +409,7 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   // ──────────────────────────────────────────
-  // 🔧 USER MANAGEMENT (admin.html)
+  // 🔧 USER MANAGEMENT (admin.html) with Reset Password
   // ──────────────────────────────────────────
   const userTable = document.getElementById("userManagementTable");
   if (userTable) {
@@ -438,6 +435,7 @@ document.addEventListener("DOMContentLoaded", function() {
               ${u.active ? "Deactivate" : "Activate"}
             </button>
             <button data-index="${i}" class="delete-user-btn">Delete</button>
+            <button data-index="${i}" class="reset-password-btn">Reset Password</button>
           </td>
         `;
         tbody.appendChild(tr);
@@ -472,9 +470,24 @@ document.addEventListener("DOMContentLoaded", function() {
           renderUsers();
         })
       );
+
+      // Reset Password
+      tbody.querySelectorAll(".reset-password-btn").forEach(btn =>
+        btn.addEventListener("click", () => {
+          const i = +btn.dataset.index;
+          const newPass = prompt(`Enter a new password for ${users[i].username}:`);
+          if (!newPass || newPass.length < 6) {
+            alert("Password must be at least 6 characters.");
+            return;
+          }
+          users[i].password = newPass;
+          localStorage.setItem("users", JSON.stringify(users));
+          alert(`✅ Password for ${users[i].username} has been reset.`);
+        })
+      );
     }
 
     renderUsers();
   }
 
-}); 
+});
