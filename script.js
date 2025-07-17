@@ -145,8 +145,7 @@ document.addEventListener("DOMContentLoaded", function() {
   // ──────────────────────────────────────────
   // 📆 COLLAPSIBLE CALENDAR TOGGLE (index.html, my-bookings.html)
   // ──────────────────────────────────────────
-  const toggleCalendarBtns = document.querySelectorAll("#toggleCalendar");
-  toggleCalendarBtns.forEach(btn => {
+  document.querySelectorAll("#toggleCalendar").forEach(btn => {
     const section = document.getElementById("calendarSection");
     if (btn && section) {
       btn.addEventListener("click", function() {
@@ -181,9 +180,13 @@ document.addEventListener("DOMContentLoaded", function() {
           const slotEl = document.createElement("div");
           slotEl.className = "calendarSlot";
           const match = bookings.find(b => {
-            if (b.pitch !== selPitch || b.date !== selDate || b.status === "Rejected") return false;
+            if (
+              b.pitch !== selPitch ||
+              b.date  !== selDate  ||
+              b.status === "Rejected"
+            ) return false;
             const start = parseTime(b.time);
-            const end = parseTime(b.endTime);
+            const end   = parseTime(b.endTime);
             return slotMin >= start && slotMin < end;
           });
           if (match) {
@@ -207,13 +210,13 @@ document.addEventListener("DOMContentLoaded", function() {
   // ──────────────────────────────────────────
   // 🛡️ BOOKING FORM ENFORCEMENT & SUBMISSION (index.html)
   // ──────────────────────────────────────────
-  const bookingForm = document.getElementById("bookingForm");
+  const bookingForm        = document.getElementById("bookingForm");
   const bookingFormSection = document.getElementById("bookingFormSection");
   if (bookingForm && bookingFormSection) {
     if (!checkLoginStatus()) {
       bookingForm.style.display = "none";
       const note = document.createElement("p");
-      note.className = "login-note";
+      note.className   = "login-note";
       note.textContent = "Please log in to request a pitch.";
       bookingFormSection.appendChild(note);
     }
@@ -224,11 +227,11 @@ document.addEventListener("DOMContentLoaded", function() {
         return;
       }
       const currentUser = getCurrentUser();
-      const pitch = document.getElementById("pitch").value;
-      const date = document.getElementById("date").value;
-      const time = document.getElementById("time").value;
+      const pitch   = document.getElementById("pitch").value;
+      const date    = document.getElementById("date").value;
+      const time    = document.getElementById("time").value;
       const endTime = document.getElementById("endTime").value;
-      const team = document.getElementById("team").value;
+      const team    = document.getElementById("team").value;
       if (!pitch || !date || !time || !endTime || !team) {
         alert("Please fill in all booking details.");
         return;
@@ -236,7 +239,7 @@ document.addEventListener("DOMContentLoaded", function() {
       const bookings = JSON.parse(localStorage.getItem("bookings")) || [];
       const conflict = bookings.some(b =>
         b.pitch === pitch &&
-        b.date === date &&
+        b.date  === date  &&
         !(endTime <= b.time || time >= b.endTime) &&
         b.status !== "Rejected"
       );
@@ -264,7 +267,7 @@ document.addEventListener("DOMContentLoaded", function() {
   // ──────────────────────────────────────────
   const myBookingRows = document.getElementById("myBookingRows");
   if (myBookingRows) {
-    const all = JSON.parse(localStorage.getItem("bookings")) || [];
+    const all  = JSON.parse(localStorage.getItem("bookings")) || [];
     const user = getCurrentUser();
     const mine = all.filter(b => b.username === user.username);
     myBookingRows.innerHTML = "";
@@ -286,7 +289,7 @@ document.addEventListener("DOMContentLoaded", function() {
   // 📊 ADMIN CALENDAR TOGGLE & RENDER (admin.html)
   // ──────────────────────────────────────────
   const toggleAdminCal = document.getElementById("toggleAdminCalendar");
-  const adminCalSec = document.getElementById("adminCalendarSection");
+  const adminCalSec    = document.getElementById("adminCalendarSection");
   if (toggleAdminCal && adminCalSec) {
     toggleAdminCal.addEventListener("click", function() {
       adminCalSec.classList.toggle("hidden");
@@ -295,9 +298,9 @@ document.addEventListener("DOMContentLoaded", function() {
         : "📆 Hide All Bookings Calendar";
     });
   }
-  const adminCalDate = document.getElementById("adminCalendarDate");
+  const adminCalDate  = document.getElementById("adminCalendarDate");
   const adminCalPitch = document.getElementById("adminCalendarPitch");
-  const adminCalGrid = document.getElementById("adminCalendarGrid");
+  const adminCalGrid  = document.getElementById("adminCalendarGrid");
   if (adminCalDate && adminCalPitch && adminCalGrid) {
     const bookings = JSON.parse(localStorage.getItem("bookings")) || [];
     const parseTime = t => {
@@ -310,7 +313,7 @@ document.addEventListener("DOMContentLoaded", function() {
       const p = adminCalPitch.value;
       for (let h = 8; h < 22; h++) {
         for (let m = 0; m < 60; m += 30) {
-          const ts = `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}`;
+          const ts  = `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}`;
           const min = parseTime(ts);
           const slot = document.createElement("div");
           slot.className = "calendarSlot";
@@ -331,7 +334,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
       }
     };
-    adminCalDate.value = new Date().toISOString().slice(0,10);
+    adminCalDate.value  = new Date().toISOString().slice(0,10);
     adminCalPitch.value = "";
     adminCalDate.addEventListener("change", renderAdminCalendar);
     adminCalPitch.addEventListener("change", renderAdminCalendar);
@@ -341,12 +344,12 @@ document.addEventListener("DOMContentLoaded", function() {
   // ──────────────────────────────────────────
   // 🛠️ ADMIN BOOKINGS TABLE + FILTERS + ACTIONS (admin.html)
   // ──────────────────────────────────────────
-  const adminTable = document.getElementById("adminBookingTable");
-  const filterDate = document.getElementById("filterDate");
+  const adminTable  = document.getElementById("adminBookingTable");
+  const filterDate  = document.getElementById("filterDate");
   const filterPitch = document.getElementById("filterPitch");
   if (adminTable) {
     const bookings = JSON.parse(localStorage.getItem("bookings")) || [];
-    const tbody = adminTable.querySelector("tbody");
+    const tbody    = adminTable.querySelector("tbody");
 
     function renderAdminTable() {
       tbody.innerHTML = "";
@@ -356,19 +359,21 @@ document.addEventListener("DOMContentLoaded", function() {
 
       list.forEach(b => {
         const idx = bookings.indexOf(b);
-        const tr = document.createElement("tr");
+        const tr  = document.createElement("tr");
         tr.innerHTML = `
           <td>${b.team}</td>
           <td>${b.pitch}</td>
           <td>${b.date}</td>
-          <td>`;
-        tr.innerHTML += `${b.time}</td><td>${b.endTime}</td><td>${b.username}</td>`;
-        tr.innerHTML += `<td>${b.status}</td>
+          <td>${b.time}</td>
+          <td>${b.endTime}</td>
+          <td>${b.username}</td>
+          <td>${b.status}</td>
           <td>
             <button data-index="${idx}" class="approve-btn">✅ Approve</button>
             <button data-index="${idx}" class="reject-btn">❌ Reject</button>
             <button data-index="${idx}" class="delete-btn">🗑 Delete</button>
-          </td>`;
+          </td>
+        `;
         tbody.appendChild(tr);
       });
 
@@ -425,8 +430,12 @@ document.addEventListener("DOMContentLoaded", function() {
           <td>${u.email}</td>
           <td>
             <select class="role-dropdown" data-index="${i}">
-              <option value="Manager"${u.role === "Manager" ? " selected" : ""}>Manager</option>
-              <option value="Admin"${u.role === "Admin" ? " selected" : ""}>Admin</option>
+              <option value="Manager"${u.role === "Manager" ? " selected" : ""}>
+                Manager
+              </option>
+              <option value="Admin"${u.role === "Admin" ? " selected" : ""}>
+                Admin
+              </option>
             </select>
           </td>
           <td>${u.active ? "Active" : "Inactive"}</td>
@@ -435,13 +444,15 @@ document.addEventListener("DOMContentLoaded", function() {
               ${u.active ? "Deactivate" : "Activate"}
             </button>
             <button data-index="${i}" class="delete-user-btn">Delete</button>
-            <button data-index="${i}" class="reset-password-btn">Reset Password</button>
+            <button data-index="${i}" class="reset-password-btn">
+              Reset Password
+            </button>
           </td>
         `;
         tbody.appendChild(tr);
       });
 
-      // Toggle Active/Inactive
+      // Toggle active/inactive
       tbody.querySelectorAll(".toggle-active-btn").forEach(btn =>
         btn.addEventListener("click", () => {
           const i = +btn.dataset.index;
@@ -451,7 +462,7 @@ document.addEventListener("DOMContentLoaded", function() {
         })
       );
 
-      // Delete User
+      // Delete user
       tbody.querySelectorAll(".delete-user-btn").forEach(btn =>
         btn.addEventListener("click", () => {
           const i = +btn.dataset.index;
@@ -461,7 +472,7 @@ document.addEventListener("DOMContentLoaded", function() {
         })
       );
 
-      // Change Role
+      // Change role
       tbody.querySelectorAll(".role-dropdown").forEach(sel =>
         sel.addEventListener("change", () => {
           const i = +sel.dataset.index;
@@ -471,7 +482,7 @@ document.addEventListener("DOMContentLoaded", function() {
         })
       );
 
-      // Reset Password
+      // Reset password
       tbody.querySelectorAll(".reset-password-btn").forEach(btn =>
         btn.addEventListener("click", () => {
           const i = +btn.dataset.index;
