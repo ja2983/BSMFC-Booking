@@ -2,68 +2,120 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Book a Pitch – Bugbrooke St Michaels FC</title>
   <link rel="stylesheet" href="style.css" />
-
-  <!-- ✅ Load EmailJS SDK FIRST -->
-  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
-  <script>
-    emailjs.init("hDPKD0IZX7WcNSZEa"); // ✅ Your Public Key
-  </script>
-
-  <!-- ✅ Load your main script AFTER EmailJS is initialized -->
   <script src="script.js" defer></script>
 </head>
 <body>
   <nav>
     <img src="bugbrooke-logo.png" alt="Bugbrooke Logo" />
-    <a href="index.html">📅 Book Pitch</a>
-    <a href="my-bookings.html">📖 My Bookings</a>
-    <a href="admin.html">🔧 Admin Dashboard</a>
-    <a href="register.html">🆕 Register</a>
-    <a href="login.html" id="loginLink">🔐 Login</a>
-    <a href="logout.html" id="logoutLink" class="hidden">🔓 Logout</a>
+    <div class="nav-links">
+      <a href="index.html">📅 Book Pitch</a>
+      <a href="my-bookings.html">📖 My Bookings</a>
+      <a href="admin.html">🔧 Admin Dashboard</a>
+      <a href="register.html">🆕 Register</a>
+      <a href="login.html" id="loginLink">🔐 Login</a>
+      <a href="#" id="logoutLink" class="hidden">🔓 Logout</a>
+    </div>
   </nav>
 
   <main>
+    <h1>Book a Pitch</h1>
+
+    <!-- Booking Form -->
     <section id="bookingFormSection">
-      <h1>Book a Pitch</h1>
       <form id="bookingForm">
-        <label for="pitch">Pitch</label>
-        <select id="pitch" name="pitch" required>
-          <option value="">Select a pitch</option>
-          <option value="Pitch 1 - 5v5">Pitch 1 - 5v5</option>
-          <option value="Pitch 2 - 7v7">Pitch 2 - 7v7</option>
-          <option value="Pitch 3 - Combi">Pitch 3 - Combi</option>
-          <option value="Pitch 4 - Small 11v11">Pitch 4 - Small 11v11</option>
-          <option value="Pitch 5 - 9v9">Pitch 5 - 9v9</option>
-          <option value="Pitch 6 - 11v11">Pitch 6 - 11v11</option>
-          <option value="Pitch 7 - Main Pitch">Pitch 7 - Main Pitch</option>
-        </select>
+        <div class="field-group">
+          <label for="pitch">Pitch</label>
+          <select id="pitch">
+            <option value="">Select a pitch</option>
+            <option>Pitch 1 - 5v5</option>
+            <option>Pitch 2 - 7v7</option>
+            <option>Pitch 3 - Combi</option>
+            <option>Pitch 4 - Small 11v11</option>
+            <option>Pitch 5 - 9v9</option>
+            <option>Pitch 6 - 11v11</option>
+            <option>Pitch 7 - Main Pitch</option>
+          </select>
+        </div>
 
-        <label for="date">Date</label>
-        <input id="date" name="date" type="date" required />
+        <div class="field-group">
+          <label for="date">Date</label>
+          <input type="date" id="date" />
+        </div>
 
-        <label for="time">Start Time</label>
-        <select id="time" name="time" required></select>
+        <div class="field-group">
+          <label for="time">Start Time</label>
+          <input type="time" id="time" />
+        </div>
 
-        <label for="endTime">End Time</label>
-        <select id="endTime" name="endTime" required></select>
+        <div class="field-group">
+          <label for="endTime">End Time</label>
+          <input type="time" id="endTime" />
+        </div>
 
-        <label for="team">Team</label>
-        <select id="team" name="team" required>
-          <option value="">Select a team</option>
-        </select>
-
-        <label for="manager">Manager</label>
-        <input id="manager" name="manager" type="text" readonly required />
+        <div class="field-group">
+          <label for="team">Team Name</label>
+          <select id="team">
+            <option value="">Select your team</option>
+            <option>Minis</option>
+            <option>U7</option>
+            <option>U8 Black</option>
+            <option>U8 White</option>
+            <option>U9 Black</option>
+            <option>U9 White</option>
+            <option>U10</option>
+            <option>U11</option>
+            <option>U12</option>
+            <option>U13 White</option>
+            <option>U13 Blue</option>
+            <option>U14 Black</option>
+            <option>U14 White</option>
+            <option>U15</option>
+            <option>U16</option>
+            <option>U18</option>
+            <option>U13 Girls White</option>
+            <option>U13 Girls Black</option>
+            <option>U18 Girls</option>
+            <option>Ladies</option>
+            <option>Reserves</option>
+            <option>First Team</option>
+          </select>
+        </div>
 
         <button type="submit">Submit Booking</button>
       </form>
-      <p id="confirmation" class="hidden">
-        Your booking request has been submitted!
-      </p>
+    </section>
+
+    <!-- Availability Calendar -->
+    <section>
+      <h2>
+        <button id="toggleCalendar" class="collapsible">
+          📆 View Availability Calendar
+        </button>
+      </h2>
+      <div id="calendarSection" class="collapsible-content hidden">
+        <div class="field-group">
+          <label for="calendarDate">Date</label>
+          <input type="date" id="calendarDate" />
+        </div>
+
+        <div class="field-group">
+          <label for="calendarPitch">Pitch</label>
+          <select id="calendarPitch">
+            <option>Pitch 1 - 5v5</option>
+            <option>Pitch 2 - 7v7</option>
+            <option>Pitch 3 - Combi</option>
+            <option>Pitch 4 - Small 11v11</option>
+            <option>Pitch 5 - 9v9</option>
+            <option>Pitch 6 - 11v11</option>
+            <option>Pitch 7 - Main Pitch</option>
+          </select>
+        </div>
+
+        <div id="calendarGrid" class="calendar-grid"></div>
+      </div>
     </section>
   </main>
 </body>

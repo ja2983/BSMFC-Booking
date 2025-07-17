@@ -1,40 +1,61 @@
+<!-- ✅ Recompiled register.html with autocomplete fixes -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Register – Bugbrooke St Michaels FC</title>
   <link rel="stylesheet" href="style.css" />
   <script src="script.js" defer></script>
 </head>
-<body class="registerPage">
+<body>
   <nav>
     <img src="bugbrooke-logo.png" alt="Bugbrooke Logo" />
-    <a href="index.html">📅 Book Pitch</a>
-    <a href="my-bookings.html">📖 My Bookings</a>
-    <a href="admin.html">🔧 Admin Dashboard</a>
-    <a href="register.html">🆕 Register</a>
-    <a href="login.html" id="loginLink">🔐 Login</a>
-    <a href="logout.html" id="logoutLink">🔓 Logout</a>
+    <div class="nav-links">
+      <a href="index.html">📅 Book Pitch</a>
+      <a href="my-bookings.html">📖 My Bookings</a>
+      <a href="admin.html">🔧 Admin Dashboard</a>
+      <a href="register.html">🆕 Register</a>
+      <a href="login.html" id="loginLink">🔐 Login</a>
+      <a href="logout.html" id="logoutLink" class="hidden">🔓 Logout</a>
+    </div>
   </nav>
 
-  <h1>Register</h1>
+  <main>
+    <section>
+      <h2>Register</h2>
+      <form id="registerForm" autocomplete="off">
+        <div class="field-group">
+          <label for="username">Username</label>
+          <input id="username" name="username" type="text" autocomplete="new-username" required />
+        </div>
 
-  <section class="cardPanel">
-    <form id="registerForm">
-      <label for="regUsername">Username:</label>
-      <input type="text" id="regUsername" required />
+        <div class="field-group">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" autocomplete="off" required />
+        </div>
 
-      <label for="regEmail">Email:</label>
-      <input type="email" id="regEmail" required />
+        <div class="field-group">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" autocomplete="new-password" required />
+        </div>
 
-      <label for="regPassword">Password:</label>
-      <input type="password" id="regPassword" required />
+        <div class="field-group">
+          <label for="role">Role</label>
+          <select id="role" name="role" required>
+            <option value="">Select role</option>
+            <option value="Manager">Manager</option>
+            <option value="Admin">Admin</option>
+          </select>
+        </div>
 
-      <label for="regConfirm">Confirm Password:</label>
-      <input type="password" id="regConfirm" required />
+        <button type="submit">Register</button>
+      </form>
 
-      <button type="submit">Register</button>
-    </form>
-  </section>
+      <p class="login-note">
+        Already have an account? <a href="login.html">Login here</a>.
+      </p>
+    </section>
+  </main>
 </body>
 </html>

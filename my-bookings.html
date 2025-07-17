@@ -10,51 +10,65 @@
 <body>
   <nav>
     <img src="bugbrooke-logo.png" alt="Bugbrooke Logo" />
-    <a href="index.html">📅 Book Pitch</a>
-    <a href="my-bookings.html">📖 My Bookings</a>
-    <a href="admin.html">🔧 Admin Dashboard</a>
-    <a href="register.html">🆕 Register</a>
-    <a href="login.html" id="loginLink">🔐 Login</a>
-    <a href="logout.html" id="logoutLink">🔓 Logout</a>
+    <div class="nav-links">
+      <a href="index.html">📅 Book Pitch</a>
+      <a href="my-bookings.html">📖 My Bookings</a>
+      <a href="admin.html">🔧 Admin Dashboard</a>
+      <a href="register.html">🆕 Register</a>
+      <a href="login.html" id="loginLink">🔐 Login</a>
+      <a href="#" id="logoutLink" class="hidden">🔓 Logout</a>
+    </div>
   </nav>
 
   <main>
     <h1>My Bookings</h1>
 
-    <!-- 🗓 Calendar View -->
-    <section id="calendarSection">
-      <h2>Calendar View</h2>
-      <label for="calendarDate">Date</label>
-      <input type="date" id="calendarDate" />
-
-      <label for="calendarPitch">Pitch</label>
-      <select id="calendarPitch">
-        <option value="">Select a pitch</option>
-      </select>
-
-      <div id="calendarGrid" class="calendarGrid">
-        <!-- Slots rendered dynamically -->
+    <!-- availability calendar -->
+    <section>
+      <h2>
+        <button id="toggleCalendar" class="collapsible">
+          📆 View Availability Calendar
+        </button>
+      </h2>
+      <div id="calendarSection" class="collapsible-content hidden">
+        <div class="field-group">
+          <label for="calendarDate">Date</label>
+          <input type="date" id="calendarDate" />
+        </div>
+        <div class="field-group">
+          <label for="calendarPitch">Pitch</label>
+          <select id="calendarPitch">
+            <option>Pitch 1 - 5v5</option>
+            <option>Pitch 2 - 7v7</option>
+            <option>Pitch 3 - Combi</option>
+            <option>Pitch 4 - Small 11v11</option>
+            <option>Pitch 5 - 9v9</option>
+            <option>Pitch 6 - 11v11</option>
+            <option>Pitch 7 - Main Pitch</option>
+          </select>
+        </div>
+        <div id="calendarGrid" class="calendar-grid"></div>
       </div>
     </section>
 
-    <!-- 📋 My Booking Table -->
-    <section id="myBookingsList">
-      <h2>My Booking Requests</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Pitch</th>
-            <th>Date</th>
-            <th>Time</th>
-            <th>Team</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="myBookingRows">
-          <!-- Populated via script.js -->
-        </tbody>
-      </table>
+    <!-- upcoming bookings table -->
+    <section>
+      <h2>Upcoming Bookings</h2>
+      <div class="admin-table-wrapper">
+        <table id="myBookingsTable">
+          <thead class="sticky-header">
+            <tr>
+              <th>Pitch</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Team</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="myBookingRows"></tbody>
+        </table>
+      </div>
     </section>
   </main>
 </body>

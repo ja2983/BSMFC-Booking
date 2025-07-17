@@ -2,10 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin Dashboard – Bugbrooke St Michaels FC</title>
   <link rel="stylesheet" href="style.css" />
   <script src="script.js" defer></script>
@@ -13,72 +10,108 @@
 <body>
   <nav>
     <img src="bugbrooke-logo.png" alt="Bugbrooke Logo" />
-    <a href="index.html">📅 Book Pitch</a>
-    <a href="my-bookings.html">📖 My Bookings</a>
-    <a href="admin.html">🔧 Admin Dashboard</a>
-    <a href="register.html">🆕 Register</a>
-    <a href="login.html" id="loginLink">🔐 Login</a>
-    <a href="logout.html" id="logoutLink">🔓 Logout</a>
+    <div class="nav-links">
+      <a href="index.html">📅 Book Pitch</a>
+      <a href="my-bookings.html">📖 My Bookings</a>
+      <a href="admin.html">🔧 Admin Dashboard</a>
+      <a href="register.html">🆕 Register</a>
+      <a href="login.html" id="loginLink">🔐 Login</a>
+      <a href="#" id="logoutLink" class="hidden">🔓 Logout</a>
+    </div>
   </nav>
 
-  <main class="dashboard">
+  <main>
     <h1>Admin Dashboard</h1>
 
-    <!-- ─── Calendar View ─── -->
-    <section id="calendarSection">
-      <h2>View Bookings Calendar</h2>
-
-      <label for="calendarDate">Date</label>
-      <input type="date" id="calendarDate" />
-
-      <label for="calendarPitch">Pitch</label>
-      <select id="calendarPitch">
-        <option value="">Select a pitch</option>
-      </select>
-
-      <div id="calendarGrid" class="calendarGrid">
-        <!-- slots rendered by script.js -->
+    <!-- admin calendar -->
+    <section>
+      <h2>
+        <button id="toggleAdminCalendar" class="collapsible">
+          📆 View All Bookings Calendar
+        </button>
+      </h2>
+      <div id="adminCalendarSection" class="collapsible-content hidden">
+        <div class="field-group">
+          <label for="adminCalendarDate">Date</label>
+          <input type="date" id="adminCalendarDate" />
+        </div>
+        <div class="field-group">
+          <label for="adminCalendarPitch">Pitch</label>
+          <select id="adminCalendarPitch">
+            <option value="">All pitches</option>
+            <option>Pitch 1 - 5v5</option>
+            <option>Pitch 2 - 7v7</option>
+            <option>Pitch 3 - Combi</option>
+            <option>Pitch 4 - Small 11v11</option>
+            <option>Pitch 5 - 9v9</option>
+            <option>Pitch 6 - 11v11</option>
+            <option>Pitch 7 - Main Pitch</option>
+          </select>
+        </div>
+        <div id="adminCalendarGrid" class="calendar-grid"></div>
       </div>
     </section>
 
-    <!-- ─── Manage Bookings ─── -->
-    <section id="manageBookings">
-      <h2>Manage Bookings</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Pitch</th>
-            <th>Date</th>
-            <th>Time</th>
-            <th>Team</th>
-            <th>Manager</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="bookingRows">
-          <!-- rows appended by script.js -->
-        </tbody>
-      </table>
+    <!-- booking filters -->
+    <section class="filters">
+      <div class="field-group">
+        <label for="filterDate">Filter by Date</label>
+        <input type="date" id="filterDate" />
+      </div>
+      <div class="field-group">
+        <label for="filterPitch">Filter by Pitch</label>
+        <select id="filterPitch">
+          <option value="">All pitches</option>
+          <option>Pitch 1 - 5v5</option>
+          <option>Pitch 2 - 7v7</option>
+          <option>Pitch 3 - Combi</option>
+          <option>Pitch 4 - Small 11v11</option>
+          <option>Pitch 5 - 9v9</option>
+          <option>Pitch 6 - 11v11</option>
+          <option>Pitch 7 - Main Pitch</option>
+        </select>
+      </div>
     </section>
 
-    <!-- ─── Manage Users ─── -->
-    <section id="userManagement">
-      <h2>Manage Users</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="userRows">
-          <!-- rows appended by script.js -->
-        </tbody>
-      </table>
+    <!-- manage bookings -->
+    <section>
+      <h2>Manage Bookings</h2>
+      <div class="admin-table-wrapper">
+        <table id="adminBookingTable">
+          <thead class="sticky-header">
+            <tr>
+              <th>Team</th>
+              <th>Pitch</th>
+              <th>Date</th>
+              <th>Start</th>
+              <th>End</th>
+              <th>User</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- user management -->
+    <section>
+      <h2>User Management</h2>
+      <div class="admin-table-wrapper">
+        <table id="userManagementTable">
+          <thead class="sticky-header">
+            <tr>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
     </section>
   </main>
 </body>

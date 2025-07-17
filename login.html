@@ -2,33 +2,45 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login – Bugbrooke St Michaels FC</title>
   <link rel="stylesheet" href="style.css" />
   <script src="script.js" defer></script>
 </head>
-<body class="loginPage">
+<body>
   <nav>
     <img src="bugbrooke-logo.png" alt="Bugbrooke Logo" />
-    <a href="index.html">📅 Book Pitch</a>
-    <a href="my-bookings.html">📖 My Bookings</a>
-    <a href="admin.html">🔧 Admin Dashboard</a>
-    <a href="register.html">🆕 Register</a>
-    <a href="login.html" id="loginLink">🔐 Login</a>
-    <a href="logout.html" id="logoutLink">🔓 Logout</a>
+    <div class="nav-links">
+      <a href="index.html">📅 Book Pitch</a>
+      <a href="my-bookings.html">📖 My Bookings</a>
+      <a href="admin.html">🔧 Admin Dashboard</a>
+      <a href="register.html">🆕 Register</a>
+      <a href="login.html" id="loginLink">🔐 Login</a>
+      <a href="logout.html" id="logoutLink" class="hidden">🔓 Logout</a>
+    </div>
   </nav>
 
-  <h1>Login</h1>
+  <main>
+    <section>
+      <h2>Login</h2>
+      <form id="loginForm">
+        <div class="field-group">
+          <label for="username">Username</label>
+          <input id="username" name="username" type="text" required />
+        </div>
 
-  <section class="cardPanel">
-    <form id="loginForm">
-      <label for="username">Username:</label>
-      <input type="text" id="username" required />
+        <div class="field-group">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" required />
+        </div>
 
-      <label for="password">Password:</label>
-      <input type="password" id="password" required />
+        <button type="submit">Login</button>
+      </form>
 
-      <button type="submit">Login</button>
-    </form>
-  </section>
+      <p class="login-note">
+        Don't have an account? <a href="register.html">Register here</a>.
+      </p>
+    </section>
+  </main>
 </body>
 </html>
