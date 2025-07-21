@@ -3,8 +3,8 @@
 // ─────────────────────────────────────────────
 // 1. Supabase Client Initialization
 // ─────────────────────────────────────────────
-const SUPABASE_URL     = 'https://your-project-id.supabase.co'; // ← replace
-const SUPABASE_ANON_KEY = 'your-public-anon-key';               // ← replace
+const SUPABASE_URL     = 'https://huwqxkpovijdowetihrj.supabase.co'; // ← replace
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1d3F4a3BvdmlqZG93ZXRpaHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI3ODEyNzksImV4cCI6MjA2ODM1NzI3OX0.RT1QbJjmGEL4HfrOJl53mZbAcgHRfMaDKcNN1Lsl404';               // ← replace
 const supabase         = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // ─────────────────────────────────────────────
