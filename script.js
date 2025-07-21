@@ -29,17 +29,22 @@ async function logoutUser() {
 }
 
 // ─────────────────────────────────────────────
-// 3. Page Access Control (runs immediately)
+// 3. Page Access Control (Immediate IIFE)
 // ─────────────────────────────────────────────
 (async () => {
   const path = window.location.pathname.split('/').pop();
-  const publicPages = ['login.html', 'register.html', ''];
-  const isAdminPage = path === 'admin.html';
-  const loggedIn = await checkLoginStatus();
+  const publicPages = ['', 'login.html', 'register.html'];
+  const isAdminPage     = path === 'admin.html';
+  const isMyBookingsPage = path === 'my-bookings.html';
+  const loggedIn        = await checkLoginStatus();
+
+  // Redirect unauthenticated users off protected pages
   if (!publicPages.includes(path) && !loggedIn) {
     alert('Please log in to access this page.');
     return window.location.href = 'login.html';
   }
+
+  // Guard admin.html → only Admin role
   if (isAdminPage && loggedIn) {
     const user = await getCurrentUser();
     const { data: meta, error } = await supabase
@@ -47,10 +52,16 @@ async function logoutUser() {
       .select('role, active')
       .eq('id', user.id)
       .single();
-    if (error || meta.role !== 'Admin' || !meta.active) {
+    if (error || !meta.active || meta.role !== 'Admin') {
       alert('You don’t have permission to view that page.');
       return window.location.href = 'index.html';
     }
+  }
+
+  // Guard my-bookings.html → any logged-in user
+  if (isMyBookingsPage && !loggedIn) {
+    alert('Please log in to view your bookings.');
+    return window.location.href = 'login.html';
   }
 })();
 
@@ -58,8 +69,8 @@ async function logoutUser() {
 // 4. Main Logic on DOMContentLoaded
 // ─────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
-  const isLoggedIn = await checkLoginStatus();
-  const currentUser = isLoggedIn ? await getCurrentUser() : null;
+  const isLoggedIn    = await checkLoginStatus();
+  const currentUser   = isLoggedIn ? await getCurrentUser() : null;
 
   // ──────────────────────────────────────────
   // Navbar: Toggle Login / Logout Links
@@ -91,7 +102,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // ──────────────────────────────────────────
-  // Register Page Logic
+  // Register Page Logic (register.html)
   // ──────────────────────────────────────────
   const registerForm = document.getElementById('registerForm');
   if (registerForm) {
@@ -106,16 +117,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         return alert('Please fill in all fields.');
       }
 
-      const { data: authData, error: authError } = await supabase.auth.signUp({ email, password });
-      if (authError) return alert(authError.message);
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+        email, password
+      });
+      if (signUpError) return alert(signUpError.message);
 
-      await supabase.from('users').insert([{
-        id: authData.user.id,
+      const { error: insertError } = await supabase.from('users').insert([{
+        id:       signUpData.user.id,
         username,
         email,
         role,
-        active: true
+        active:   true
       }]);
+      if (insertError) return alert(insertError.message);
 
       alert('✅ Registration successful! Please check your email.');
       window.location.href = 'login.html';
@@ -123,7 +137,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // ──────────────────────────────────────────
-  // Login Page Logic
+  // Login Page Logic (login.html)
   // ──────────────────────────────────────────
   const loginForm = document.getElementById('loginForm');
   if (loginForm) {
@@ -158,7 +172,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // ──────────────────────────────────────────
-  // Calendar Toggle (Index & My-Bookings)
+  // Calendar Toggle (index.html, my-bookings.html)
   // ──────────────────────────────────────────
   document.querySelectorAll('#toggleCalendar').forEach(btn => {
     const section = document.getElementById('calendarSection');
@@ -171,7 +185,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   // ──────────────────────────────────────────
-  // Calendar Rendering (Index)
+  // Calendar Rendering (index.html)
   // ──────────────────────────────────────────
   const calendarDate  = document.getElementById('calendarDate');
   const calendarPitch = document.getElementById('calendarPitch');
@@ -216,6 +230,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             slotEl.textContent = timeStr;
             slotEl.classList.add('available');
           }
+
           calendarGrid.appendChild(slotEl);
         }
       }
@@ -229,7 +244,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // ──────────────────────────────────────────
-  // Booking Form Guard & Submission (Index)
+  // Booking Form Guard & Submission (index.html)
   // ──────────────────────────────────────────
   const bookingForm        = document.getElementById('bookingForm');
   const bookingFormSection = document.getElementById('bookingFormSection');
@@ -253,12 +268,14 @@ document.addEventListener('DOMContentLoaded', async () => {
           return alert('Please fill in all booking details.');
         }
 
-        const { data: existing = [] } = await supabase
+        const { data: existing = [], error } = await supabase
           .from('bookings')
-          .select('time, end_time, status')
+          .select('time,end_time')
           .eq('date', date)
           .eq('pitch', pitch)
           .neq('status', 'Rejected');
+        if (error) return alert(error.message);
+
         const conflict = existing.some(b =>
           !(endTime <= b.time || time >= b.end_time)
         );
@@ -509,7 +526,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           if (!newPass || newPass.length < 6) {
             return alert('Password must be at least 6 characters.');
           }
-          // Use Supabase Admin API or custom RPC to reset
+          // Requires Admin API or custom RPC endpoint
           await supabase.auth.admin.resetUserPassword(btn.dataset.id, { password: newPass });
           alert(`✅ Password for ${btn.dataset.username} reset.`);
         })
