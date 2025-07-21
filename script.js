@@ -3,74 +3,83 @@
 // ─────────────────────────────────────────────
 // 1. Supabase Client Initialization
 // ─────────────────────────────────────────────
-const SUPABASE_URL     = 'https://huwqxkpovijdowetihrj.supabase.co'; // ← replace
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1d3F4a3BvdmlqZG93ZXRpaHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI3ODEyNzksImV4cCI6MjA2ODM1NzI3OX0.RT1QbJjmGEL4HfrOJl53mZbAcgHRfMaDKcNN1Lsl404';               // ← replace
-const supabase         = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const SUPABASE_URL      = 'https://huwqxkpovijdowetihrj.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1d3F4a3BvdmlqZG93ZXRpaHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI3ODEyNzksImV4cCI6MjA2ODM1NzI3OX0.RT1QbJjmGEL4HfrOJl53mZbAcgHRfMaDKcNN1Lsl404';
+
+const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // ─────────────────────────────────────────────
 // 2. Auth Helpers
 // ─────────────────────────────────────────────
 async function checkLoginStatus() {
-  const { data: { session }, error } = await supabase.auth.getSession();
+  const { data: { session }, error } = await client.auth.getSession();
   if (error) console.error('Session error:', error.message);
   return !!session;
 }
 
 async function getCurrentUser() {
-  const { data: { user }, error } = await supabase.auth.getUser();
+  const { data: { user }, error } = await client.auth.getUser();
   if (error) console.error('GetUser error:', error.message);
   return user;
 }
 
 async function logoutUser() {
-  await supabase.auth.signOut();
-  alert("You’ve been logged out.");
+  await client.auth.signOut();
   window.location.href = 'login.html';
 }
 
 // ─────────────────────────────────────────────
-// 3. Page Access Control (Immediate IIFE)
+// 3. Auto-Logout Page Handler
+// ─────────────────────────────────────────────
+if (window.location.pathname.endsWith('logout.html')) {
+  (async () => {
+    await client.auth.signOut();
+    setTimeout(() => {
+      window.location.href = 'login.html';
+    }, 1000);
+  })();
+}
+
+// ─────────────────────────────────────────────
+// 4. Page Access Control (IIFE)
 // ─────────────────────────────────────────────
 (async () => {
-  const path = window.location.pathname.split('/').pop();
-  const publicPages = ['', 'login.html', 'register.html'];
+  const path            = window.location.pathname.split('/').pop();
+  const publicPages     = ['', 'index.html', 'login.html', 'register.html', 'logout.html'];
   const isAdminPage     = path === 'admin.html';
-  const isMyBookingsPage = path === 'my-bookings.html';
+  const isMyBookings    = path === 'my-bookings.html';
   const loggedIn        = await checkLoginStatus();
 
-  // Redirect unauthenticated users off protected pages
   if (!publicPages.includes(path) && !loggedIn) {
     alert('Please log in to access this page.');
     return window.location.href = 'login.html';
   }
 
-  // Guard admin.html → only Admin role
   if (isAdminPage && loggedIn) {
     const user = await getCurrentUser();
-    const { data: meta, error } = await supabase
+    const { data: profile, error } = await client
       .from('users')
       .select('role, active')
       .eq('id', user.id)
       .single();
-    if (error || !meta.active || meta.role !== 'Admin') {
+    if (error || !profile.active || profile.role !== 'Admin') {
       alert('You don’t have permission to view that page.');
       return window.location.href = 'index.html';
     }
   }
 
-  // Guard my-bookings.html → any logged-in user
-  if (isMyBookingsPage && !loggedIn) {
+  if (isMyBookings && !loggedIn) {
     alert('Please log in to view your bookings.');
     return window.location.href = 'login.html';
   }
 })();
 
 // ─────────────────────────────────────────────
-// 4. Main Logic on DOMContentLoaded
+// 5. Main Logic on DOMContentLoaded
 // ─────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
-  const isLoggedIn    = await checkLoginStatus();
-  const currentUser   = isLoggedIn ? await getCurrentUser() : null;
+  const isLoggedIn  = await checkLoginStatus();
+  const currentUser = isLoggedIn ? await getCurrentUser() : null;
 
   // ──────────────────────────────────────────
   // Navbar: Toggle Login / Logout Links
@@ -87,13 +96,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // ──────────────────────────────────────────
-  // Auto-logout after 10 minutes inactivity
+  // Auto-logout after inactivity (10m)
   // ──────────────────────────────────────────
   if (isLoggedIn) {
     let lastActivity = Date.now();
-    const record = () => (lastActivity = Date.now());
-    window.addEventListener('mousemove', record);
-    window.addEventListener('keydown', record);
+    const recordActivity = () => lastActivity = Date.now();
+    ['mousemove','keydown'].forEach(evt => window.addEventListener(evt, recordActivity));
     setInterval(async () => {
       if (Date.now() - lastActivity > 10 * 60 * 1000) {
         await logoutUser();
@@ -102,7 +110,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // ──────────────────────────────────────────
-  // Register Page Logic (register.html)
+  // Registration Handler (register.html)
   // ──────────────────────────────────────────
   const registerForm = document.getElementById('registerForm');
   if (registerForm) {
@@ -117,12 +125,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         return alert('Please fill in all fields.');
       }
 
-      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-        email, password
-      });
+      const { data: signUpData, error: signUpError } = await client.auth.signUp({ email, password });
       if (signUpError) return alert(signUpError.message);
 
-      const { error: insertError } = await supabase.from('users').insert([{
+      const { error: insertError } = await client.from('users').insert([{
         id:       signUpData.user.id,
         username,
         email,
@@ -137,37 +143,33 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // ──────────────────────────────────────────
-  // Login Page Logic (login.html)
+  // Login Handler (login.html)
   // ──────────────────────────────────────────
   const loginForm = document.getElementById('loginForm');
   if (loginForm) {
     loginForm.addEventListener('submit', async e => {
       e.preventDefault();
-      const username = document.getElementById('username').value.trim();
+      const email    = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
 
-      const { data: meta, error: lookupErr } = await supabase
+      const { data, error: loginError } = await client.auth.signInWithPassword({ email, password });
+      if (loginError) {
+        return alert('Login failed: ' + loginError.message);
+      }
+
+      // Fetch user profile to decide redirect
+      const user = data.user;
+      const { data: profile, error: profErr } = await client
         .from('users')
-        .select('email, role, active')
-        .eq('username', username)
+        .select('role, active')
+        .eq('id', user.id)
         .single();
-      if (lookupErr || !meta) {
-        return alert('Invalid username or password.');
-      }
-      if (!meta.active) {
-        return alert('Your account is inactive.');
+      if (profErr || !profile.active) {
+        return alert('Your account is inactive or profile missing.');
       }
 
-      const { error: signInErr } = await supabase.auth.signInWithPassword({
-        email:    meta.email,
-        password
-      });
-      if (signInErr) {
-        return alert('Login failed: ' + signInErr.message);
-      }
-
-      alert(`Welcome, ${username}!`);
-      window.location.href = meta.role === 'Admin' ? 'admin.html' : 'index.html';
+      alert(`Welcome back!`);
+      window.location.href = profile.role === 'Admin' ? 'admin.html' : 'index.html';
     });
   }
 
@@ -185,7 +187,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   // ──────────────────────────────────────────
-  // Calendar Rendering (index.html)
+  // Calendar Rendering (index.html, my-bookings.html)
   // ──────────────────────────────────────────
   const calendarDate  = document.getElementById('calendarDate');
   const calendarPitch = document.getElementById('calendarPitch');
@@ -196,7 +198,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const date  = calendarDate.value;
       const pitch = calendarPitch.value;
 
-      const { data: bookings = [], error } = await supabase
+      const { data: bookings = [], error } = await client
         .from('bookings')
         .select('*')
         .eq('date', date)
@@ -205,10 +207,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         .order('time', { ascending: true });
       if (error) return alert(error.message);
 
-      const parseTime = t => {
-        const [h, m] = t.split(':').map(Number);
-        return h * 60 + m;
-      };
+      const parseTime = t => t.split(':').reduce((h,m) => h*60 + Number(m), 0);
 
       for (let h = 8; h < 22; h++) {
         for (let m = 0; m < 60; m += 30) {
@@ -244,7 +243,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // ──────────────────────────────────────────
-  // Booking Form Guard & Submission (index.html)
+  // Booking Form Submission (index.html)
   // ──────────────────────────────────────────
   const bookingForm        = document.getElementById('bookingForm');
   const bookingFormSection = document.getElementById('bookingFormSection');
@@ -268,7 +267,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           return alert('Please fill in all booking details.');
         }
 
-        const { data: existing = [], error } = await supabase
+        const { data: existing = [], error } = await client
           .from('bookings')
           .select('time,end_time')
           .eq('date', date)
@@ -283,7 +282,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           return alert('⚠️ That time slot is already booked.');
         }
 
-        await supabase.from('bookings').insert([{
+        await client.from('bookings').insert([{
           user_id:  currentUser.id,
           team,
           pitch,
@@ -292,10 +291,9 @@ document.addEventListener('DOMContentLoaded', async () => {
           end_time: endTime,
           status:   'Pending'
         }]);
-
         alert('✅ Booking request submitted and pending approval.');
         bookingForm.reset();
-        if (typeof renderSlots === 'function') renderSlots();
+        renderSlots();
       });
     }
   }
@@ -305,7 +303,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ──────────────────────────────────────────
   const myBookingRows = document.getElementById('myBookingRows');
   if (myBookingRows) {
-    const { data: bookings = [], error } = await supabase
+    const { data: bookings = [], error } = await client
       .from('bookings')
       .select('*')
       .eq('user_id', currentUser.id)
@@ -327,7 +325,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // ──────────────────────────────────────────
-  // Admin Calendar Toggle & Render (admin.html)
+  // Admin Calendar (admin.html)
   // ──────────────────────────────────────────
   const toggleAdminCal = document.getElementById('toggleAdminCalendar');
   const adminCalSec    = document.getElementById('adminCalendarSection');
@@ -349,7 +347,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const date  = adminCalDate.value;
       const pitch = adminCalPitch.value;
 
-      const { data: bookings = [], error } = await supabase
+      const { data: bookings = [], error } = await client
         .from('bookings')
         .select('*')
         .eq('date', date)
@@ -358,10 +356,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         .order('time', { ascending: true });
       if (error) return console.error(error);
 
-      const parseTime = t => {
-        const [h, m] = t.split(':').map(Number);
-        return h * 60 + m;
-      };
+      const parseTime = t => t.split(':').reduce((h,m) => h*60 + Number(m), 0);
 
       for (let h = 8; h < 22; h++) {
         for (let m = 0; m < 60; m += 30) {
@@ -396,7 +391,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // ──────────────────────────────────────────
-  // Admin Bookings Table & Actions (admin.html)
+  // Admin Booking Table & Actions (admin.html)
   // ──────────────────────────────────────────
   const adminTable  = document.getElementById('adminBookingTable');
   const filterDate  = document.getElementById('filterDate');
@@ -405,17 +400,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     const tbody = adminTable.querySelector('tbody');
     async function renderAdminTable() {
       tbody.innerHTML = '';
-      const dateFilter  = filterDate?.value || '';
-      const pitchFilter = filterPitch?.value || '';
+      const df = filterDate?.value || '';
+      const pf = filterPitch?.value || '';
 
-      const { data: bookings = [], error } = await supabase
+      const { data: bookings = [], error } = await client
         .from('bookings')
         .select('*')
         .order('date', { ascending: true });
       if (error) return console.error(error);
 
       bookings
-        .filter(b => (!dateFilter || b.date === dateFilter) && (!pitchFilter || b.pitch === pitchFilter))
+        .filter(b => (!df || b.date === df) && (!pf || b.pitch === pf))
         .forEach(b => {
           const tr = document.createElement('tr');
           tr.innerHTML = `
@@ -436,19 +431,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       tbody.querySelectorAll('.approve-btn').forEach(btn =>
         btn.addEventListener('click', async () => {
-          await supabase.from('bookings').update({ status: 'Approved' }).eq('id', btn.dataset.id);
+          await client.from('bookings').update({ status: 'Approved' }).eq('id', btn.dataset.id);
           renderAdminTable();
         })
       );
       tbody.querySelectorAll('.reject-btn').forEach(btn =>
         btn.addEventListener('click', async () => {
-          await supabase.from('bookings').update({ status: 'Rejected' }).eq('id', btn.dataset.id);
+          await client.from('bookings').update({ status: 'Rejected' }).eq('id', btn.dataset.id);
           renderAdminTable();
         })
       );
       tbody.querySelectorAll('.delete-btn').forEach(btn =>
         btn.addEventListener('click', async () => {
-          await supabase.from('bookings').delete().eq('id', btn.dataset.id);
+          await client.from('bookings').delete().eq('id', btn.dataset.id);
           renderAdminTable();
         })
       );
@@ -467,7 +462,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const tbody = userTable.querySelector('tbody');
     async function renderUsers() {
       tbody.innerHTML = '';
-      const { data: users = [], error } = await supabase
+      const { data: users = [], error } = await client
         .from('users')
         .select('*')
         .order('username', { ascending: true });
@@ -500,22 +495,22 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       tbody.querySelectorAll('.role-select').forEach(sel =>
         sel.addEventListener('change', async () => {
-          await supabase.from('users').update({ role: sel.value }).eq('id', sel.dataset.id);
+          await client.from('users').update({ role: sel.value }).eq('id', sel.dataset.id);
           alert('Role updated.');
         })
       );
 
       tbody.querySelectorAll('.toggle-active-btn').forEach(btn =>
         btn.addEventListener('click', async () => {
-          const { data: [usr] } = await supabase.from('users').select('active').eq('id', btn.dataset.id);
-          await supabase.from('users').update({ active: !usr.active }).eq('id', btn.dataset.id);
+          const { data: [usr] } = await client.from('users').select('active').eq('id', btn.dataset.id);
+          await client.from('users').update({ active: !usr.active }).eq('id', btn.dataset.id);
           renderUsers();
         })
       );
 
       tbody.querySelectorAll('.delete-user-btn').forEach(btn =>
         btn.addEventListener('click', async () => {
-          await supabase.from('users').delete().eq('id', btn.dataset.id);
+          await client.from('users').delete().eq('id', btn.dataset.id);
           renderUsers();
         })
       );
@@ -526,8 +521,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           if (!newPass || newPass.length < 6) {
             return alert('Password must be at least 6 characters.');
           }
-          // Requires Admin API or custom RPC endpoint
-          await supabase.auth.admin.resetUserPassword(btn.dataset.id, { password: newPass });
+          await client.auth.admin.resetUserPassword(btn.dataset.id, { password: newPass });
           alert(`✅ Password for ${btn.dataset.username} reset.`);
         })
       );

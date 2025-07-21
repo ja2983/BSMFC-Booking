@@ -2,16 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>My Bookings – Bugbrooke St Michaels FC</title>
 
-  <!-- ✅ Existing Styles -->
+  <!-- ✅ Stylesheet -->
   <link rel="stylesheet" href="style.css" />
 
-  <!-- ✅ Supabase JS Client for backend connectivity -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <!-- ✅ Supabase JS Client (versioned UMD build) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.5/dist/umd/supabase.min.js"></script>
 
-  <!-- ✅ Your original script remains untouched -->
+  <!-- ✅ Main frontend logic -->
   <script src="script.js" defer></script>
 </head>
 <body>
@@ -28,9 +28,9 @@
   </nav>
 
   <main>
-    <h1>My Bookings</h1>
+    <h1>📖 My Bookings</h1>
 
-    <!-- availability calendar -->
+    <!-- Availability Calendar -->
     <section>
       <h2>
         <button id="toggleCalendar" class="collapsible">
@@ -58,7 +58,7 @@
       </div>
     </section>
 
-    <!-- upcoming bookings table -->
+    <!-- Upcoming Bookings Table -->
     <section>
       <h2>Upcoming Bookings</h2>
       <div class="admin-table-wrapper">
@@ -73,7 +73,9 @@
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody id="myBookingRows"></tbody>
+          <tbody id="myBookingRows">
+            <!-- Rows populated dynamically via script.js -->
+          </tbody>
         </table>
       </div>
     </section>

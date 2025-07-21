@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Supabase Connection Test – Bugbrooke Diagnostics</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      padding: 2rem;
+      background: #f1f1f1;
+      color: #333;
+    }
+    h1 { margin-bottom: 1rem; }
+    .status { margin: 1rem 0; font-weight: bold; }
+    .pass { color: green; }
+    .fail { color: red; }
+    .info { font-style: italic; }
+  </style>
+
+  <!-- Supabase client library -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+</head>
+<body>
+  <h1>🧪 Supabase Frontend Test</h1>
+  <p>This page checks:</p>
+  <ul>
+    <li>✅ Supabase JS client loaded</li>
+    <li>🔐 Auth session status</li>
+    <li>📦 Access to <code>users</code> table</li>
+  </ul>
+
+  <div id="clientStatus" class="status info">🔄 Initializing client...</div>
+  <div id="authStatus"   class="status info">🔄 Checking auth...</div>
+  <div id="dbStatus"     class="status info">🔄 Checking database...</div>
+
+  <script>
+    window.onload = async () => {
+      // Replace these with your real credentials
+      const SUPABASE_URL      = 'https://huwqxkpovijdowetihrj.supabase.co';
+      const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1d3F4a3BvdmlqZG93ZXRpaHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI3ODEyNzksImV4cCI6MjA2ODM1NzI3OX0.RT1QbJjmGEL4HfrOJl53mZbAcgHRfMaDKcNN1Lsl404';
+
+      // Initialize Supabase client
+      const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      const clientEl = document.getElementById('clientStatus');
+      if (client) {
+        clientEl.textContent = '✅ Supabase client initialized';
+        clientEl.className = 'status pass';
+      } else {
+        clientEl.textContent = '❌ Supabase client failed to initialize';
+        clientEl.className = 'status fail';
+        return;
+      }
+
+      // Auth session check
+      try {
+        const { data: { session }, error: authErr } = await client.auth.getSession();
+        const authEl = document.getElementById('authStatus');
+        if (authErr) {
+          authEl.textContent = '❌ Auth error: ' + authErr.message;
+          authEl.className = 'status fail';
+        } else if (session && session.user) {
+          authEl.textContent = '✅ Logged in as: ' + session.user.email;
+          authEl.className = 'status pass';
+        } else {
+          authEl.textContent = '🔓 No user logged in';
+          authEl.className = 'status fail';
+        }
+      } catch (e) {
+        const authEl = document.getElementById('authStatus');
+        authEl.textContent = '❌ Unexpected auth error: ' + e.message;
+        authEl.className = 'status fail';
+      }
+
+      // Database connectivity check
+      try {
+        const { data, error: dbErr } = await client
+          .from('users')
+          .select('username')
+          .limit(1);
+        const dbEl = document.getElementById('dbStatus');
+        if (dbErr) {
+          dbEl.textContent = '❌ Database error: ' + dbErr.message;
+          dbEl.className = 'status fail';
+        } else {
+          dbEl.textContent = '✅ Fetched sample user: ' + (data[0]?.username || 'None found');
+          dbEl.className = 'status pass';
+        }
+      } catch (e) {
+        const dbEl = document.getElementById('dbStatus');
+        dbEl.textContent = '❌ Unexpected DB error: ' + e.message;
+        dbEl.className = 'status fail';
+      }
+    };
+  </script>
+</body>
+</html>

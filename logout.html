@@ -2,50 +2,37 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Logging Out – Bugbrooke St Michaels FC</title>
 
-  <!-- ✅ Existing Styles -->
+  <!-- ✅ Styles -->
   <link rel="stylesheet" href="style.css" />
 
-  <!-- ✅ Supabase JS Client for auth logout -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <!-- ✅ Supabase JS Client (versioned UMD build) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.5/dist/umd/supabase.min.js"></script>
 
-  <script>
-    // ✅ Supabase project details
-    const SUPABASE_URL = "https://your-project.supabase.co"; // ← replace with your actual Supabase project URL
-    const SUPABASE_ANON_KEY = "your-public-anon-key";        // ← replace with your public anon key
-
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    window.onload = async function () {
-      // 🔒 Sign out from Supabase Auth
-      await supabase.auth.signOut();
-
-      // 🧹 Clear local state
-      localStorage.removeItem("isLoggedIn");
-
-      // 🔁 Redirect to Login page after delay
-      setTimeout(() => {
-        window.location.href = "login.html";
-      }, 1500);
-    };
-  </script>
+  <!-- ✅ Main logic file (handles sign-out centrally via script.js) -->
+  <script src="script.js" defer></script>
 </head>
 <body>
   <nav>
     <img src="bugbrooke-logo.png" alt="Bugbrooke Logo" />
-    <a href="index.html">📅 Book Pitch</a>
-    <a href="my-bookings.html">📖 My Bookings</a>
-    <a href="admin.html">🔧 Admin Dashboard</a>
-    <a href="register.html">🆕 Register</a>
-    <a href="login.html" id="loginLink">🔐 Login</a>
-    <a href="logout.html" id="logoutLink">🔓 Logout</a>
+    <div class="nav-links">
+      <a href="index.html">📅 Book Pitch</a>
+      <a href="my-bookings.html">📖 My Bookings</a>
+      <a href="admin.html">🔧 Admin Dashboard</a>
+      <a href="register.html">🆕 Register</a>
+      <a href="login.html" id="loginLink">🔐 Login</a>
+      <a href="#" id="logoutLink" class="hidden">🔓 Logout</a>
+    </div>
   </nav>
 
-  <h1>Logging You Out…</h1>
-  <section class="cardPanel" style="text-align:center;">
-    <p>You are being securely signed out.</p>
-    <p><em>Redirecting to Login shortly…</em></p>
-  </section>
+  <main>
+    <h1>Logging You Out…</h1>
+    <section class="cardPanel" style="text-align:center;">
+      <p>You are being securely signed out.</p>
+      <p><em>Redirecting to login shortly…</em></p>
+    </section>
+  </main>
 </body>
 </html>

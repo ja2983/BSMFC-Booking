@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login – Bugbrooke St Michaels FC</title>
 
-  <!-- ✅ Existing Styles -->
+  <!-- Stylesheet -->
   <link rel="stylesheet" href="style.css" />
 
-  <!-- ✅ Supabase JS Client for backend connectivity -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <!-- Supabase JS Client (versioned UMD build) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.5/dist/umd/supabase.min.js"></script>
 
-  <!-- ✅ Your original script remains untouched -->
+  <!-- Main application logic -->
   <script src="script.js" defer></script>
 </head>
 <body>
@@ -23,29 +23,40 @@
       <a href="admin.html">🔧 Admin Dashboard</a>
       <a href="register.html">🆕 Register</a>
       <a href="login.html" id="loginLink">🔐 Login</a>
-      <a href="logout.html" id="logoutLink" class="hidden">🔓 Logout</a>
+      <a href="#" id="logoutLink" class="hidden">🔓 Logout</a>
     </div>
   </nav>
 
   <main>
+    <h1>🔐 Login</h1>
+
     <section>
-      <h2>Login</h2>
       <form id="loginForm">
         <div class="field-group">
-          <label for="username">Username</label>
-          <input id="username" name="username" type="text" required />
+          <label for="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            placeholder="Enter your email"
+            required
+          />
         </div>
 
         <div class="field-group">
           <label for="password">Password</label>
-          <input id="password" name="password" type="password" required />
+          <input
+            type="password"
+            id="password"
+            placeholder="Enter your password"
+            required
+          />
         </div>
 
         <button type="submit">Login</button>
       </form>
 
       <p class="login-note">
-        Don't have an account? <a href="register.html">Register here</a>.
+        Need an account? <a href="register.html">Register here</a>
       </p>
     </section>
   </main>
